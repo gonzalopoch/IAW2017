@@ -1,0 +1,20 @@
+/* enable absolute positioning */
+.inner-addon {
+  position: relative;
+}
+
+/* align glyph */
+.left-addon .glyphicon  { left:  10px;}
+
+.table-header { text-align: left; color: dodgerBlue; }
+
+.button { color: dodgerBlue; }
+.button:hover { color: royalBlue; cursor: pointer; cursor: hand;}
+
+.nav-button {color: white; float: left; padding: 5px; margin-top: 20px; font-size: 110%;}
+.nav-button:hover { color: ghostWhite ; text-decoration: none; cursor: pointer; cursor: hand;}
+.nav-button.active {background: white; color: dodgerBlue;}
+.nav-button.active:hover {text-decoration: none; }
+
+.nav-brand {font-size: 230%; color: white; padding-right: 10px;}
+.nav-brand:hover { color: ghostWhite ; text-decoration: none;}
