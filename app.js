@@ -13,7 +13,7 @@ app.use(cookieParser())
 
 app.use('/api/v1/contacts', contacts);
 
-app.use('/iaw/', express.static('public'));
+app.use(express.static('public'));
 
 
 module.exports = app;
