@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script data-require="ui-bootstrap@*" data-semver="0.12.1" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+    <script src="dirPagination.js"></script>
+     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet" />
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+  </head>
+
+  <body ng-app="myApp">
+    <div>
+      <nav class="navbar navbar-default" role="navigation" style="background-color: dodgerBLue; border: none; border-radius: 0px; margin-bottom: 0px;">
+        <div class="navbar-header pull-right">
+          <div style="margin-bottom: -10px; margin-top: -5px;" align="right">
+            <b class="nav-brand">IAW</b>
+          </div>
+          
+          <div>
+            <a class="nav-link" ui-sref="home" ng-show="$state.current.name!='home' && $state.current.name!='register'">Cerrar sesión</a>
+          </div>
+        </div>
+        <div ng-show="$state.current.name!='home' && $state.current.name!='register'" class="navbar-header pull-left" style="display: inline-block; margin-top: 20px; padding-left: 5px">
+          <span class="nav-button">
+            <div style="padding: 5px; border-radius: 3px 3px 0px 0px" ui-sref="campaigns" ui-sref-active="nav-button active" >Campañas</div>
+          </span>
+          <span class="nav-button">
+            <div style="padding: 5px; border-radius: 3px 3px 0px 0px" ui-sref="contacts" ui-sref-active="nav-button active">Contactos</div>
+          </span>
+        </div>
+      </nav>
+      <div class="container">
+        <ui-view></ui-view>
+      </div>
+    </div>
+  </body>
+
+</html>

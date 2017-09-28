@@ -1,0 +1,54 @@
+<h1>Detalle de Campaña</h1>
+  <h2>{{params.obj}}</h2>
+  <div ng-controller="campaignsController">
+    <div ng-repeat="campaign in campaigns|filter:params.obj">
+  
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Destinatario</th>
+        <th>Estado</th>
+        <th>Veces abierto</th>
+        <th>Veces reenviado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Acá para  <tr> habría que hacer un ng-repeat y agarrar
+       todos los destinatarios de las campañas-->
+      <tr>
+        <!-- Acá agarramos cada destinatario y mostramos los atributos
+        de veces abierto y todo.-->
+        <td>Destinatario 1</td>
+        <td>Estado 1</td>
+        <td>Veces Abierto 1</td>
+        <td>Veces Reenviado 1</td>
+      </tr>
+      <tr>
+        <td>Destinatario 2</td>
+        <td>Estado 2</td>
+        <td>Veces Abierto 2</td>
+        <td>Veces Reenviado 2</td>
+      </tr>
+    </tbody>
+  </table>
+<br>  
+<div class="container" style="background: ghostWhite">
+  {{campaign.body}}
+</div>
+<br>
+<h2>Detalles</h2>
+<ul class="list-group">
+  <li class="list-group-item">Fecha y hora de creación: {{campaign.date}}</li>
+  <li class="list-group-item">Fecha y hora de envío: {{campaign.date}}</li>
+  <li class="list-group-item">Correo remitente: {{campaign.mail}}</li>
+  <li class="list-group-item"># de destinatarios: []</li>
+  <li class="list-group-item"># de veces abierto: {{campaign.timesopen}}</li>
+  <li class="list-group-item"># de veces reenviado: [num total de reenvíos]</li>
+  <li class="list-group-item"># de errores al enviar: [num total de errores]</li>
+</ul>
+<br>
+</div>
+</div>
+<div float="left">
+  <button class="btn btn-default" ui-sref="campaigns">Volver</button>
+</div>

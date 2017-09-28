@@ -1,0 +1,43 @@
+<h1>Lista de Campañas</h1>
+<div class="inner-addon right-addon">
+  <input class="form-control" placeholder="Buscar" type="text" id="search-name" ng-model="search"/>
+  <span class="glyphicon glyphicon-search button"></span>
+</div>
+<table id="item-list" class="table table-striped">
+    <thead>
+    <tr class="table-header">
+      <th ng-click="sort(name)">Nombre
+      <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+      </th>
+      <th ng-click="sort(date)">Fecha
+      <span class="glyphicon sort-icon" ng-show="sortKey=='date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+      </th>
+      <th ng-click="sort(mail)">Remitente
+      <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+      </th>
+      <th ng-click="sort(timesopen)">Veces abierto
+      <span class="glyphicon sort-icon" ng-show="sortKey=='timesopen'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+      </th>
+      <th> </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr dir-paginate="campaign in campaigns|orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
+      <td>{{campaign.name}}</td>
+      <td>{{campaign.date}}</td>
+      <td>{{campaign.mail}}</td>
+      <td>{{campaign.timesopen}}</td>
+      <td style="min-width: 50px">
+        <div>
+          <span class="glyphicon glyphicon glyphicon-th-list button" ui-sref="detail({obj: campaign.name})"></span>
+          <span class="glyphicon glyphicon-remove button" ng-click="deleteCampaignItem(campaign)"></span>
+        </div>
+      </td>
+    
+  </tbody>
+</table>
+<div class="text-center" style="margin-top: -20px; margin-bottom: -10px;">
+  <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>
+</div>
+<button class="btn btn-custom" style="float: right; margin-top: 5px;" ui-sref="newcampaign">Nueva campaña</button>
+

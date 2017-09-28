@@ -1,0 +1,15 @@
+<div style="padding-bottom: 10px;">
+  <h1>Nueva Campaña</h1>
+    <label>Nombre:</label>
+    <input class="form-control" type="text" id="new-name" ng-model="newName" style="margin-bottom: 10px"/>
+
+    <label>Remitente: </label>
+    <input class="form-control" type="phone" id="new-mail" ng-model="newMail" style="margin-bottom: 10px"/>
+    
+    <label>Cuerpo de correo:</label>
+    <summer-note ng-model="newBody"></summer-note>
+
+</div>
+    
+<button class="btn btn-default" style="float: left" ui-sref="campaigns">Cancelar</button>
+<button class="btn btn-custom" style="float: right" ui-sref="selectcontacts" ng-click="addCampaign(newName,'01/01/2017',newMail,0,'lorem ipsum')">Elegir Destinatarios</button>
