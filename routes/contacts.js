@@ -5,6 +5,14 @@ var uuid = require('uuid/v4');
 var contacts = [];
 var contactsById = {};
 
+var contact = {name: "name1", mail:"mail1@iaw.com", phone: "112332224", tag: "tag1"};
+contact.id = uuid();
+contacts.push(contact);
+contactsById[contact.id] = contact;
+contact = {name: "name2", mail:"mail2@iaw.com", phone: "145332224", tag: "tag1"}
+contact.id = uuid();
+contacts.push(contact);
+contactsById[contact.id] = contact;
 
 router.put('/:id', function(req, res, next) {
   var updatedContact = req.body;
