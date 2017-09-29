@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ui.router','angularUtils.directives.dirPagination']);
+var myApp = angular.module('myApp', ['ui.router','angularUtils.directives.dirPagination','ngResource']);
 
 myApp.run(function ($state,$rootScope) {
     $rootScope.$state = $state;
@@ -62,90 +62,75 @@ myApp.config(function($stateProvider,$urlRouterProvider) {
   .state('contacts', {
     url: '/contactos',
     templateUrl: 'contacts.html',
-    controller: 'contactsController'
+    controller: 'ContactIndexCtrl'
   });
   
 });
 
-myApp.service("ContactService", ["$q", "$timeout", function($q, $timeout) {
-  
-  var contacts = [{name: "name1", mail:"mail1@iaw.com", phone: "112332224", tag: "tag1"},{name: "name2", mail:"mail2@iaw.com", phone: "145332224", tag: "tag1"}];
-  
-  this.getContacts = function() {
-    var deferred = $q.defer();
-    
-    $timeout(function() {
-      deferred.resolve(contacts);
-    }, 1000); 
-    
-    return deferred.promise; 
-  };
-  
-  
-  this.deleteContact = function(contactItem) {
-    var deferred = $q.defer();
-    
-    $timeout(function() {
-      contacts.splice(contacts.indexOf(contactItem), 1);  
-      deferred.resolve();
-    }, 500);
-    
-    return deferred.promise;
-  };
-  
-  this.addContact = function(contact) {
-    var deferred = $q.defer();
-    
-    $timeout(function() {
-      contacts.push(contact);  
-      deferred.resolve();
-    }, 500);
-    
-    return deferred.promise;
-  };
-   
-}]);
 
-myApp.controller("contactsController", ["$scope", "ContactService", function($scope, ContactService) {
-  
+myApp.factory("Contact", function($resource) {
+  return $resource("/api/v1/contacts/:id", {}, {
+    update: {method:'PUT', params: {name: '@name', mail: '@mail', phone: '@phone', tag: '@tag'}}
+  });
+});
+
+myApp.controller("ContactIndexCtrl", function($scope, Contact) {
+
+  Contact.query(function(data) {
+    $scope.contacts = data;
+  });
+
   $scope.currentPage = 1;
   $scope.pageSize = 10;
-  
-  // model
   $scope.sort = function(keyname){
       $scope.sortKey = keyname;   //set the sortKey to the param passed
       $scope.reverse = !$scope.reverse; //if true make it false and vice versa
   };
-  
-  $scope.refreshContacts = function() {
-    ContactService.getContacts().then(function(contacts) {
-      $scope.contacts = contacts;
-    });  
+
+  $scope.editContactEnable = function(contact){
+    if (contact != null){
+      $scope.editKey = contact.id;
+      $scope.editName = contact.name;
+      $scope.editMail = contact.mail;
+      $scope.editPhone = contact.phone;
+      $scope.editTag = contact.tag;
+    }else {
+      $scope.editKey = null;
+    }
+    
   };
-  
-  $scope.refreshContacts();
-  
-  $scope.addContact = function(name,mail,phone,tag) {
-    ContactService.addContact({name: name, mail: mail, phone: phone, tag: tag}).then(function() {
-      console.log("Contact added");
-      $scope.refreshContacts();
+
+  $scope.editContact = function(contactItem,name,mail,phone,tag) {
+    if (confirm("Seguro que desea actualizar el contacto?")){
+      Contact.update({id: contactItem.id}, {name: name, mail: mail, phone: phone, tag: tag});
+      $scope.editContactEnable(null);
+      Contact.query(function(data) {
+        $scope.contacts = data;
+      });
+    }
+  }
+
+  $scope.deleteContactItem = function(contactItem)  {
+    if (confirm("Seguro que desea eliminar?")){
+      Contact.delete({ id: contactItem.id });
+    }
+    Contact.query(function(data) {
+      $scope.contacts = data;
     });
+  };
+
+  $scope.addContact = function(name,mail,phone,tag) {
+    Contact.save({name: name, mail: mail, phone: phone, tag: tag});
     $scope.newName = "";
     $scope.newMail = "";
     $scope.newPhone = "";
     $scope.newTag = "";
-  };
-  
-  $scope.deleteContactItem = function(contactItem)  {
-    if (confirm("Seguro que desea eliminar?")){
-    ContactService.deleteContact(contactItem).then(function() {
-      console.log("Contact deleted");
-      $scope.refreshContacts();
+    Contact.query(function(data) {
+      $scope.contacts = data;
     });
-    }
   };
-  
-}]);
+
+});
 
 myApp.service("CampaignService", ["$q", "$timeout", function($q, $timeout) {
   

@@ -2,16 +2,19 @@ var express = require('express');
 var router = express.Router();
 var uuid = require('uuid/v4');
 
-var contacts = []
+var contacts = [];
 var contactsById = {};
+
 
 router.put('/:id', function(req, res, next) {
   var updatedContact = req.body;
-  
   var id = req.params["id"];    
   var contact = contactsById[id];
   if (contact) {
       contact.name = updatedContact.name;
+      contact.mail = updatedContact.mail;
+      contact.phone = updatedContact.phone;
+      contact.tag = updatedContact.tag;
       res.json(contact);
   } else {
       res.status(404).send("not found");

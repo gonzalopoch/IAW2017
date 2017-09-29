@@ -10,7 +10,7 @@
 .nav-button.active:hover {text-decoration: none;  cursor: default;}
 
 .nav-brand {font-size: 230%; color: white; padding-right: 10px;}
-.nav-brand:hover { color: ghostWhite ; text-decoration: none;}
+.nav-brand:hover {text-decoration: none; cursor: default;}
 
 .nav-link {
   color:white;

@@ -15,5 +15,7 @@ app.use('/api/v1/contacts', contacts);
 
 app.use(express.static('public'));
 
+app.use('/scripts', express.static(__dirname + '/node_modules/'));
+
 
 module.exports = app;

@@ -23,27 +23,45 @@
     </thead>
     <tbody>
     <tr dir-paginate="contact in contacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
-      <td>{{contact.name}}</td>
-      <td>{{contact.mail}}</td>
-      <td>{{contact.phone}}</td>
-      <td>{{contact.tag}}</td>
+      <td>
+        <span ng-show="editKey!=contact.id">{{contact.name}}</span>
+        <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-name" ng-model="editName">
+      </td>
+      <td>
+        <span ng-show="editKey!=contact.id">{{contact.mail}}</span>
+        <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-mail" ng-model="editMail">
+      </td>
+      <td>
+        <span ng-show="editKey!=contact.id">{{contact.phone}}</span>
+        <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="phone" id="edit-phone" ng-model="editPhone">
+      </td>
+      <td>
+        <span ng-show="editKey!=contact.id">{{contact.tag}}</span>
+        <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-tag" ng-model="editTag">
+      </td>
       <td style="min-width: 50px">
-          <span class="glyphicon glyphicon-pencil button" ng-click=""></span>
-          <span class="glyphicon glyphicon-remove button" ng-click="deleteContactItem(contact)"></span>
+        <div ng-show="editKey != contact.id">
+          <span class="glyphicon glyphicon-pencil button" ng-click="editContactEnable(contact)"></span>
+          <span class="glyphicon glyphicon-trash button" ng-click="deleteContactItem(contact)"></span>
+        </div>
+        <div ng-show="editKey == contact.id">
+          <span class="glyphicon glyphicon-ok button" ng-click="editContact(contact,editName,editMail,editPhone,editTag)"></span>
+          <span class="glyphicon glyphicon-remove button" ng-click="editContactEnable(null)"></span>
+        </div>
       </td>
     </tr>
     <tr>
       <td>
-        <input class="form-control" placeholder="Nombre" type="text" id="new-name" ng-model="newName" />
+        <input class="form-control" placeholder="Nombre" type="text" id="new-name" ng-model="newName">
       </td>
       <td>
-        <input class="form-control" placeholder="Correo" type="text" id="new-mail" ng-model="newMail" />
+        <input class="form-control" placeholder="Correo" type="text" id="new-mail" ng-model="newMail">
       </td>
       <td>
-        <input class="form-control" placeholder="Telefono" type="phone" id="new-phone" ng-model="newPhone" />
+        <input class="form-control" placeholder="Telefono" type="phone" id="new-phone" ng-model="newPhone">
       </td>
       <td>
-        <input class="form-control" placeholder="Tag" type="text" id="new-tag" ng-model="newTag" />
+        <input class="form-control" placeholder="Tag" type="text" id="new-tag" ng-model="newTag">
       </td>
       <td>
         <div style="padding-top: 7px">
