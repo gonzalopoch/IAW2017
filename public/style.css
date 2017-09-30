@@ -99,5 +99,11 @@
   padding: 5px;
 }
 
+.form-group label {
+  padding-left: 0px;
+}
 
-
+body {
+  background-image: URL('https://smhttp-ssl-46488.nexcesscdn.net/media/catalog/product/cache/1/image/1000x1000/17f82f742ffe127f42dca9de82fb58b1/t/u/tulum_1.jpg');
+  background-size: cover;
+}
