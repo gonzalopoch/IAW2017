@@ -5,36 +5,55 @@
 </div>
 <table id="item-list" class="table table-striped">
     <thead>
-    <tr class="table-header">
-      <th ng-click="sort(name)">Nombre
-      <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(date)">Fecha
-      <span class="glyphicon sort-icon" ng-show="sortKey=='date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(mail)">Remitente
-      <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(timesopen)">Veces abierto
-      <span class="glyphicon sort-icon" ng-show="sortKey=='timesopen'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th> </th>
-    </tr>
+      <tr class="table-header">
+        <th ng-click="sort('name')">Nombre
+        <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+        </th>
+        <th ng-click="sort('date')">Fecha
+        <span class="glyphicon sort-icon" ng-show="sortKey=='date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+        </th>
+        <th ng-click="sort('mail')">Remitente
+        <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+        </th>
+        <th ng-click="sort('timesopen')">Veces abierto
+        <span class="glyphicon sort-icon" ng-show="sortKey=='timesopen'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+        </th>
+        <th> </th>
+      </tr>
     </thead>
     <tbody>
-    <tr dir-paginate="campaign in campaigns|orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
-      <td>{{campaign.name}}</td>
-      <td>{{campaign.date}}</td>
-      <td>{{campaign.mail}}</td>
-      <td>{{campaign.timesopen}}</td>
-      <td style="min-width: 50px">
-        <div>
-          <span class="glyphicon glyphicon glyphicon-th-list button" ui-sref="detail({obj: campaign.name})"></span>
-          <span class="glyphicon glyphicon-trash button" ng-click="deleteCampaignItem(campaign)"></span>
-        </div>
-      </td>
-    
-  </tbody>
+      <tr dir-paginate="campaign in campaigns|orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
+        <td>{{campaign.name}}</td>
+        <td>{{campaign.date}}</td>
+        <td>{{campaign.mail}}</td>
+        <td>{{campaign.timesopen}}</td>
+        <td style="min-width: 50px">
+          <div>
+            <span class="glyphicon glyphicon glyphicon-th-list button" ui-sref="showcampaign({id: campaign.id})"></span>
+            <span class="glyphicon glyphicon-trash button" ng-click="deleteCampaignItem(campaign)"></span>
+          </div>
+        </td>
+      </tr>
+<!--       <tr>
+        <td>
+          <input class="form-control" placeholder="Esto esta" type="text" id="new-name" ng-model="newName">
+        </td>
+        <td>
+          <input class="form-control" placeholder="Al pedo pero" type="text" id="new-mail" ng-model="newMail">
+        </td>
+        <td>
+          <input class="form-control" placeholder="Arregla el ancho" type="phone" id="new-phone" ng-model="newPhone">
+        </td>
+        <td>
+          <input class="form-control" placeholder="De la tabla" type="text" id="new-tag" ng-model="newTag">
+        </td>
+        <td>
+          <div style="padding-top: 7px">
+            <span class="glyphicon glyphicon-plus button" id="add-button" ng-click=""></span>
+          </div>
+        </td>
+      </tr> -->
+    </tbody>
 </table>
 <div class="text-center" style="margin-top: -20px; margin-bottom: -10px;">
   <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>

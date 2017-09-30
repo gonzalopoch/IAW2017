@@ -1,7 +1,5 @@
 <h1>Detalle de Campaña</h1>
-  <h2>{{params.obj}}</h2>
-  <div ng-controller="campaignsController">
-    <div ng-repeat="campaign in campaigns|filter:params.obj">
+  <h2>{{campaign.name}}</h2>
   
   <table class="table table-striped">
     <thead>
@@ -32,9 +30,7 @@
     </tbody>
   </table>
 <br>  
-<div class="container" style="background: ghostWhite">
-  {{campaign.body}}
-</div>
+<div class="container-fluid body-campaña" ng-bind-html="CampaignBody"></div>
 <br>
 <h2>Detalles</h2>
 <ul class="list-group">
@@ -47,8 +43,7 @@
   <li class="list-group-item"># de errores al enviar: [num total de errores]</li>
 </ul>
 <br>
-</div>
-</div>
+
 <div float="left">
   <button class="btn btn-default" ui-sref="campaigns">Volver</button>
 </div>

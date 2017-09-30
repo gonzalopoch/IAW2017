@@ -7,9 +7,8 @@
     <input class="form-control" type="phone" id="new-mail" ng-model="newMail" style="margin-bottom: 10px"/>
     
     <label>Cuerpo de correo:</label>
-    <summer-note ng-model="newBody"></summer-note>
-
+    <summer-note id="summernote" ng-model="newBody"></summer-note>
 </div>
     
 <button class="btn btn-default" style="float: left" ui-sref="campaigns">Cancelar</button>
-<button class="btn btn-custom" style="float: right" ui-sref="selectcontacts" ng-click="addCampaign(newName,'01/01/2017',newMail,0,'lorem ipsum')">Elegir Destinatarios</button>
+<button class="btn btn-custom" style="float: right" ui-sref="selectcontacts" ng-click="addCampaign(newName,newMail)">Elegir Destinatarios</button>

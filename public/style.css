@@ -107,3 +107,19 @@ body {
   background-image: URL('https://smhttp-ssl-46488.nexcesscdn.net/media/catalog/product/cache/1/image/1000x1000/17f82f742ffe127f42dca9de82fb58b1/t/u/tulum_1.jpg');
   background-size: cover;
 }
+
+/*background-image: URL('https://i.imgur.com/O2lIRyc.jpg');
+background-image: URL('https://i.imgur.com/q04tJc1.jpg');*/
+
+.body-campaña{
+  border: solid;
+  border-width: 2px;
+  border-color: lightGrey;
+  background: ghostWhite;
+  width: 90%;
+  padding-top: 7px;
+  border-radius: 10px 10px 10px 10px;
+}
+
+
+

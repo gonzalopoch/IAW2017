@@ -5,71 +5,71 @@
 </div>
 <table id="item-list" class="table table-striped">
     <thead>
-    <tr class="table-header">
-      <th ng-click="sort(name)">Nombre
-      <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(mail)">Correo
-      <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(phone)">Teléfono
-      <span class="glyphicon sort-icon" ng-show="sortKey=='phone'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(tag)">Tags
-      <span class="glyphicon sort-icon" ng-show="sortKey=='tags'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th> </th>
-    </tr>
+      <tr class="table-header">
+        <th ng-click="sort('name')">Nombre
+        <span class="glyphicon sort-icon" ng-show="sortKey == 'name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+        </th>
+        <th ng-click="sort('mail')">Correo
+        <span class="glyphicon sort-icon" ng-show="sortKey == 'mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+        </th>
+        <th ng-click="sort('phone')">Teléfono
+        <span class="glyphicon sort-icon" ng-show="sortKey == 'phone'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+        </th>
+        <th ng-click="sort('tag')">Tags
+        <span class="glyphicon sort-icon" ng-show="sortKey == 'tag'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+        </th>
+        <th> </th>
+      </tr>
     </thead>
     <tbody>
-    <tr dir-paginate="contact in contacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
-      <td>
-        <span ng-show="editKey!=contact.id">{{contact.name}}</span>
-        <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-name" ng-model="editName">
-      </td>
-      <td>
-        <span ng-show="editKey!=contact.id">{{contact.mail}}</span>
-        <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-mail" ng-model="editMail">
-      </td>
-      <td>
-        <span ng-show="editKey!=contact.id">{{contact.phone}}</span>
-        <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="phone" id="edit-phone" ng-model="editPhone">
-      </td>
-      <td>
-        <span ng-show="editKey!=contact.id">{{contact.tag}}</span>
-        <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-tag" ng-model="editTag">
-      </td>
-      <td style="min-width: 50px">
-        <div ng-show="editKey != contact.id">
-          <span class="glyphicon glyphicon-pencil button" ng-click="editContactEnable(contact)"></span>
-          <span class="glyphicon glyphicon-trash button" ng-click="deleteContactItem(contact)"></span>
-        </div>
-        <div ng-show="editKey == contact.id">
-          <span class="glyphicon glyphicon-ok button" ng-click="editContact(contact,editName,editMail,editPhone,editTag)"></span>
-          <span class="glyphicon glyphicon-remove button" ng-click="editContactEnable(null)"></span>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <input class="form-control" placeholder="Nombre" type="text" id="new-name" ng-model="newName">
-      </td>
-      <td>
-        <input class="form-control" placeholder="Correo" type="text" id="new-mail" ng-model="newMail">
-      </td>
-      <td>
-        <input class="form-control" placeholder="Telefono" type="phone" id="new-phone" ng-model="newPhone">
-      </td>
-      <td>
-        <input class="form-control" placeholder="Tag" type="text" id="new-tag" ng-model="newTag">
-      </td>
-      <td>
-        <div style="padding-top: 7px">
-          <span class="glyphicon glyphicon-plus button" id="add-button" ng-click="addContact(newName,newMail,newPhone,newTag)"></span>
-        </div>
-      </td>
-    </tr>
-  </tbody>
+      <tr dir-paginate="contact in contacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
+        <td>
+          <span ng-show="editKey!=contact.id">{{contact.name}}</span>
+          <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-name" ng-model="editName">
+        </td>
+        <td>
+          <span ng-show="editKey!=contact.id">{{contact.mail}}</span>
+          <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-mail" ng-model="editMail">
+        </td>
+        <td>
+          <span ng-show="editKey!=contact.id">{{contact.phone}}</span>
+          <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="phone" id="edit-phone" ng-model="editPhone">
+        </td>
+        <td>
+          <span ng-show="editKey!=contact.id">{{contact.tag}}</span>
+          <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-tag" ng-model="editTag">
+        </td>
+        <td style="min-width: 50px">
+          <div ng-show="editKey != contact.id">
+            <span class="glyphicon glyphicon-pencil button" ng-click="editContactEnable(contact)"></span>
+            <span class="glyphicon glyphicon-trash button" ng-click="deleteContactItem(contact)"></span>
+          </div>
+          <div ng-show="editKey == contact.id">
+            <span class="glyphicon glyphicon-ok button" ng-click="editContact(contact,editName,editMail,editPhone,editTag)"></span>
+            <span class="glyphicon glyphicon-remove button" ng-click="editContactEnable(null)"></span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control" placeholder="Nombre" type="text" id="new-name" ng-model="newName">
+        </td>
+        <td>
+          <input class="form-control" placeholder="Correo" type="text" id="new-mail" ng-model="newMail">
+        </td>
+        <td>
+          <input class="form-control" placeholder="Telefono" type="phone" id="new-phone" ng-model="newPhone">
+        </td>
+        <td>
+          <input class="form-control" placeholder="Tag" type="text" id="new-tag" ng-model="newTag">
+        </td>
+        <td>
+          <div style="padding-top: 7px">
+            <span class="glyphicon glyphicon-plus button" id="add-button" ng-click="addContact(newName,newMail,newPhone,newTag)"></span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
 </table>
 <div class="text-center" style="margin-top: -20px;">
   <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>
