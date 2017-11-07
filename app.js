@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var contacts = require('./routes/contacts');
 var campaigns = require('./routes/campaigns');
 
+
 var app = express();
 
 app.use(bodyParser.json());
@@ -22,3 +23,6 @@ app.use('/scripts', express.static(__dirname + '/node_modules/'));
 
 
 module.exports = app;
+
+
+
