@@ -47,45 +47,60 @@ router.delete('/:id', function(req, res, next) {
 });
 
 
-let transporter = nodemailer.createTransport({
-  service: 'gmail',
-  secure: false,
-  port: 25,
-  auth: {
-    user: 'ingappw2017@gmail.com',
-    pass: '2017ingappw'
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
-
-
 router.post('/', function(req, res, next) {
 
   if( !req.body.name || !req.body.user || !req.body.mail) {
     return res.json({success: false, msg: 'Ingrese usuario, remitente y nombre.'});
   }else{
+
     var campaign = req.body;
     campaign.id = uuid();
     campaigns.push(campaign);
     campaignsById[campaign.id] = campaign;
-    res.status(201);
-    res.send(campaign);
+
     res.json({success: true, msg: 'Campaña creada.'});
+
+    var to_mailer = '';
+    var str;
+    campaign.contacts.forEach(function(element,i) {
+      if (i == 0){
+        to_mailer = element.mail;
+      }else{
+        str = element.mail
+        to_mailer = to_mailer.concat(', '+str);
+      }
+    });
+
+    var from_mailer = '"';
+    from_mailer = from_mailer.concat(campaign.sender+'" <'+campaign.mail)
+
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      secure: false,
+      port: 25,
+      auth: {
+        user: campaign.mail,
+        pass: campaign.mailpass,
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+
+
     let HelperOptions = {
-      from: '"IAW2017" <ingappw2017@gmail.com',
-      to: 'gonzalopoch@hotmail.com',
+      from: from_mailer,
+      to: to_mailer,
       subject: campaign.name,
       html: campaign.body
     };
 
     transporter.sendMail(HelperOptions, (error, info) =>{
-    if(error){
-      return console.log(error);
-    }
-    console.log("Mensaje enviado.");
-    console.log(info);
+      if(error){
+        return console.log(error);
+      }
+      console.log("Mensaje enviado.");
+      console.log(info);
     });
   }
 });

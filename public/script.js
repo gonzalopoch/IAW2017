@@ -452,7 +452,7 @@ myApp.controller("CampaignShowCtrl", function($scope, Campaign, $stateParams, $s
 myApp.controller("CampaignNewCtrl", function($scope, $state, Campaign, $stateParams, $http, API_ENDPOINT) {
   
   $http.get(API_ENDPOINT.url + '/memberid').then(function(result) {
-    $scope.currentuser = result.data.username;
+    $scope.currentuser = result.data;
   });
 
   $scope.newcampaign = $scope.newcampaign || {};
@@ -513,12 +513,14 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, Campaign, $statePar
   $scope.selectContacts = function (){
     var body = $('#summernote').summernote('code');
     var date = new Date(Date.now());
-    if ($scope.newcampaign.name!='' && $scope.newcampaign.name && $scope.newcampaign.mail!='' && $scope.newcampaign.mail ){
+    if ($scope.newcampaign.name!='' && $scope.newcampaign.name && $scope.newcampaign.sender!='' && $scope.newcampaign.sender ){
       $scope.newcampaign.body = body;
       $scope.newcampaign.date = date.toLocaleDateString('en-GB');
       $scope.newcampaign.time = date.toLocaleTimeString('en-GB');
       $scope.newcampaign.timesopen = 0;
-      $scope.newcampaign.user = $scope.currentuser;
+      $scope.newcampaign.user = $scope.currentuser.username;
+      $scope.newcampaign.mail = $scope.currentuser.mail;
+      $scope.newcampaign.mailpass = $scope.currentuser.mailpass;
       $state.go('newcampaign.contacts');
     }
     else{

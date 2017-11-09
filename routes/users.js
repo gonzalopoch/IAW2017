@@ -16,11 +16,12 @@ var usersById = {};
 
 var user = {username: "user", mail:"ingappw2017@gmail.com"};
 user.id = uuid();
-bcrypt.genSalt(10, function(err, salt) {                     //
-    bcrypt.hash('2017ingappw', salt, function(err, hash) {  //
-        user.mailpass = hash;                              // Guardo contraseña mail
-    });                                                   // encriptada
-});                                                      //
+// bcrypt.genSalt(10, function(err, salt) {                     //
+//     bcrypt.hash('2017ingappw', salt, function(err, hash) {  //
+//         user.mailpass = hash;                              // Guardo contraseña mail
+//     });                                                   // encriptada
+// }); 
+user.mailpass = '2017ingappw';                                                     //
 bcrypt.genSalt(10, function(err, salt) {                   //
     bcrypt.hash('password', salt, function(err, hash) {   //
         user.password = hash;                            // Guardo contraseña user
