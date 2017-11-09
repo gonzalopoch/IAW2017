@@ -4,28 +4,26 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Destinatario</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Tags</th>
         <th>Estado</th>
-        <th>Veces abierto</th>
+        <th>Veces visto</th>
         <th>Veces reenviado</th>
       </tr>
     </thead>
     <tbody>
       <!-- Acá para  <tr> habría que hacer un ng-repeat y agarrar
        todos los destinatarios de las campañas-->
-      <tr>
+      <tr ng-repeat="contact in campaign.contacts">
         <!-- Acá agarramos cada destinatario y mostramos los atributos
         de veces abierto y todo.-->
-        <td>Destinatario 1</td>
-        <td>Estado 1</td>
-        <td>Veces Abierto 1</td>
-        <td>Veces Reenviado 1</td>
-      </tr>
-      <tr>
-        <td>Destinatario 2</td>
-        <td>Estado 2</td>
-        <td>Veces Abierto 2</td>
-        <td>Veces Reenviado 2</td>
+        <td>{{contact.name}}</td>
+        <td>{{contact.mail}}</td>
+        <td>{{contact.tag}}</td>
+        <td>{{contact.state}}</td>
+        <td>{{contact.seentimes}}</td>
+        <td>{{contact.forwardtimes}}</td>
       </tr>
     </tbody>
   </table>
@@ -34,13 +32,12 @@
 <br>
 <h2>Detalles</h2>
 <ul class="list-group">
-  <li class="list-group-item">Fecha y hora de creación: {{campaign.date}}</li>
-  <li class="list-group-item">Fecha y hora de envío: {{campaign.date}}</li>
-  <li class="list-group-item">Correo remitente: {{campaign.mail}}</li>
-  <li class="list-group-item"># de destinatarios: []</li>
-  <li class="list-group-item"># de veces abierto: {{campaign.timesopen}}</li>
-  <li class="list-group-item"># de veces reenviado: [num total de reenvíos]</li>
-  <li class="list-group-item"># de errores al enviar: [num total de errores]</li>
+  <li class="list-group-item"><b>Fecha y hora de creación:</b> {{campaign.date}} {{campaign.time}}</li>
+  <li class="list-group-item"><b>Correo remitente:</b> {{campaign.mail}}</li>
+  <li class="list-group-item"><b>Cantidad de destinatarios:</b> {{campaign.contacts.length}}</li>
+  <li class="list-group-item"><b>Cantidad de veces abierto:</b> {{campaign.timesopen}}</li>
+  <li class="list-group-item"><b>Cantidad total de veces reenviado:</b> 0</li>
+  <li class="list-group-item"><b>Cantidad total de errores al enviar:</b> 0</li>
 </ul>
 <br>
 

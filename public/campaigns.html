@@ -22,9 +22,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr dir-paginate="campaign in campaigns|orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
+      <tr dir-paginate="campaign in campaigns|filter: { user: currentuser } :true |orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
         <td>{{campaign.name}}</td>
-        <td>{{campaign.date}}</td>
+        <td>{{campaign.date}} {{campaign.time}}</td>
         <td>{{campaign.mail}}</td>
         <td>{{campaign.timesopen}}</td>
         <td style="min-width: 50px">
@@ -58,5 +58,5 @@
 <div class="text-center" style="margin-top: -20px; margin-bottom: -10px;">
   <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>
 </div>
-<button class="btn btn-custom" style="float: right; margin-top: 5px;" ui-sref="newcampaign">Nueva campaña</button>
+<button class="btn btn-custom" style="float: right; margin-top: 5px;" ui-sref="newcampaign.body">Nueva campaña</button>
 

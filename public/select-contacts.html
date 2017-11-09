@@ -1,100 +1,96 @@
 <h1>Elegir Destinatarios</h1>
+<div ng-controller="ContactIndexCtrl">
+  <div class="table-select">
+    <div class="inner-addon right-addon">
+      <input class="form-control" placeholder="Buscar" type="text" id="search-name" ng-model="search"/>
+      <span class="glyphicon glyphicon-search button"></span>
+    </div>
 
-<div class="table-select">
-<div class="inner-addon right-addon">
-  <input class="form-control" placeholder="Buscar" type="text" id="search-name" ng-model="search"/>
-  <span class="glyphicon glyphicon-search button"></span>
-</div>
+    <table id="all-item-list" class="table">
+        <thead>
+        <tr class="table-header">
+          <th ng-click="sort(name)">Nombre
+          <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+          </th>
+          <th ng-click="sort(mail)">Correo
+          <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+          </th>
+          <th ng-click="sort(tag)">Tags
+          <span class="glyphicon sort-icon" ng-show="sortKey=='tags'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+          </th>
+          <th> </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr dir-paginate="contact in contacts| filter: { user: currentuser } :true | filter: notAdded | orderBy:sortKey:reverse | filter:search | itemsPerPage:10">
+          <td>{{contact.name}}</td>
+          <td>{{contact.mail}}</td>
+          <td>{{contact.tag}}</td>
+          <td>
+            <input type="checkbox" value="{{contact}}">
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-<table id="item-list" class="table">
-    <thead>
-    <tr class="table-header">
-      <th ng-click="sort(name)">Nombre
-      <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(mail)">Correo
-      <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(tag)">Tags
-      <span class="glyphicon sort-icon" ng-show="sortKey=='tags'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th> </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr dir-paginate="contact in contacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
-      <td>{{contact.name}}</td>
-      <td>{{contact.mail}}</td>
-      <td>{{contact.tag}}</td>
-      <td>
-        <input type="checkbox">
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <div class="text-center" style="margin-top: -20px; margin-bottom: -25px">
+      <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>
+    </div>
+  </div>
 
-<div class="text-center" style="margin-top: -20px; margin-bottom: -25px">
-  <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>
-</div>
-</div>
+  </div>
+  <div class="add-select button" style="display: inline-block" ng-click="addContacts()">
+      <span class="glyphicon glyphicon-chevron-down"></span>
+      <b> Añadir seleccionados </b>
+  </div>
+  <div class="add-unselect button" style="float: right" ng-click="deleteContacts()">
+    <b> Eliminar seleccionados </b>
+    <span class="glyphicon glyphicon-chevron-up"></span>
+  </div>
 
+  <div class="add-unselect">
+    <div class="inner-addon right-addon">
+      <input class="form-control" placeholder="Buscar" type="text" id="search-name" ng-model="search"/>
+      <span class="glyphicon glyphicon-search button"></span>
+    </div>
 
-<div class="add-select button" style="display: inline-block">
-    <span class="glyphicon glyphicon-chevron-down"></span>
-    <b> Añadir seleccionados </b>
-</div>
-<div class="add-unselect button" style="float: right">
-  <b> Eliminar seleccionados </b>
-  <span class="glyphicon glyphicon-chevron-up"></span>
-</div>
+    <table id="selected-item-list" class="table">
+        <thead>
+        <tr class="table-header">
+          <th ng-click="sort(name)">Nombre
+          <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+          </th>
+          <th ng-click="sort(mail)">Correo
+          <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+          </th>
+          <th ng-click="sort(tag)">Tags
+          <span class="glyphicon sort-icon" ng-show="sortKey=='tags'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
+          </th>
+          <th> </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr dir-paginate="contact in selectedcontacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
+          <td>{{contact.name}}</td>
+          <td>{{contact.mail}}</td>
+          <td>{{contact.tag}}</td>
+          <td>
+            <input type="checkbox" value="{{contact}}">
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-<div class="add-unselect">
-<div class="inner-addon right-addon">
-  <input class="form-control" placeholder="Buscar" type="text" id="search-name" ng-model="search"/>
-  <span class="glyphicon glyphicon-search button"></span>
-</div>
-
-<table id="item-list" class="table">
-    <thead>
-    <tr class="table-header">
-      <th ng-click="sort(name)">Nombre
-      <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(mail)">Correo
-      <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th ng-click="sort(tag)">Tags
-      <span class="glyphicon sort-icon" ng-show="sortKey=='tags'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-up':!reverse}"></span>
-      </th>
-      <th> </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr dir-paginate="contact in contacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
-      <td>{{contact.name}}</td>
-      <td>{{contact.mail}}</td>
-      <td>{{contact.tag}}</td>
-      <td>
-        <input type="checkbox">
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="text-center" style="margin-top: -20px; margin-bottom: -25px">
-  <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>
-</div>
-
-</div>
+    <div class="text-center" style="margin-top: -20px; margin-bottom: -25px">
+      <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>
+    </div>
+  </div>
 
 <div style="margin-top: 20px" >
-  <button class="btn btn-default" style="float: left;" ui-sref="newcampaign">Cancelar</button>
-  <button class="btn btn-custom" style="float: right;" ui-sref="campaigns">Crear campaña</button>
+  <button class="btn btn-default" style="float: left;" ng-click="goBack()">Volver</button>
+  <button class="btn btn-custom" style="float: right;" ng-click="addCampaign()">Crear campaña</button>
 </div>
 
 
-
-<div data-ng-controller="">   
-</div>
 
 
