@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var uuid = require('uuid/v4');
+var nodemailer = require('nodemailer');
 
 var campaigns = [];
 var campaignsById = {};
@@ -46,6 +47,20 @@ router.delete('/:id', function(req, res, next) {
 });
 
 
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  secure: false,
+  port: 25,
+  auth: {
+    user: 'ingappw2017@gmail.com',
+    pass: '2017ingappw'
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+
+
 router.post('/', function(req, res, next) {
 
   if( !req.body.name || !req.body.user || !req.body.mail) {
@@ -58,7 +73,23 @@ router.post('/', function(req, res, next) {
     res.status(201);
     res.send(campaign);
     res.json({success: true, msg: 'Campaña creada.'});
+    let HelperOptions = {
+      from: '"IAW2017" <ingappw2017@gmail.com',
+      to: 'gonzalopoch@hotmail.com',
+      subject: campaign.name,
+      html: campaign.body
+    };
+
+    transporter.sendMail(HelperOptions, (error, info) =>{
+    if(error){
+      return console.log(error);
+    }
+    console.log("Mensaje enviado.");
+    console.log(info);
+    });
   }
 });
 
 module.exports = router;
+
+
