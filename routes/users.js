@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var uuid = require('uuid/v4');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 
 var passport   = require('passport');
 var jwt        = require('jwt-simple');

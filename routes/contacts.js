@@ -77,8 +77,7 @@ router.post('/', function(req, res, next) {
     contacts.push(contact);
     contactsById[contact.id] = contact;
     res.status(201);
-    res.send(contact);
-    res.json({success: true, msg: 'Usuario creada.'});
+    res.json({success: true, msg: 'Usuario creado.'});
   }
 });
 

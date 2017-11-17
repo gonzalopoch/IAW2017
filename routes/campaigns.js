@@ -87,7 +87,6 @@ router.post('/', function(req, res, next) {
       }
     });
 
-
     let HelperOptions = {
       from: from_mailer,
       to: to_mailer,
