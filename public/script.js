@@ -6,7 +6,7 @@ myApp.constant('AUTH_EVENTS', {
 })
  
 myApp.constant('API_ENDPOINT', {
-  url: 'http://localhost:3000/api/v1/users'
+  url: 'http://localhost:3000/api/v1'
 });
 
 myApp.run(function ($state,$rootScope) {
@@ -102,7 +102,6 @@ myApp.config(function($stateProvider,$urlRouterProvider) {
 myApp.run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
   $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
     if (!AuthService.isAuthenticated()) {
-      console.log(next.name);
       if (next.name !== 'outside.home' && next.name !== 'outside.register') {
         event.preventDefault();
         $state.go('outside.home');
@@ -155,7 +154,7 @@ myApp.service('AuthService', function($q, $http, API_ENDPOINT) {
         if (!user.username || !pass.password || !pass.password2 || !user.mail || !user.mailpass) {
           reject('Complete los campos marcados con asteriscos.');
         } else {
-          $http.post(API_ENDPOINT.url + '/signup', user).then(function(result) {
+          $http.post(API_ENDPOINT.url + '/users/signup', user).then(function(result) {
             if (result.data.success) {
               resolve(result.data.msg);
             } else {
@@ -169,7 +168,7 @@ myApp.service('AuthService', function($q, $http, API_ENDPOINT) {
  
   var login = function(user) {
     return $q(function(resolve, reject) {
-      $http.post(API_ENDPOINT.url + '/authenticate', user).then(function(result) {
+      $http.post(API_ENDPOINT.url + '/users/authenticate', user).then(function(result) {
         if (result.data.success) {
           storeUserCredentials(result.data.token);
           resolve(result.data.msg);
@@ -263,25 +262,16 @@ myApp.controller('RegisterCtrl', function($scope, AuthService, $state) {
 
 
 myApp.controller('InsideCtrl', function($scope, AuthService, API_ENDPOINT, $http, $state) {
-  
-  $http.get(API_ENDPOINT.url + '/memberid').then(function(result) {
-    $scope.user = result.data;
-  });
 
   $scope.destroySession = function() {
     AuthService.logout();
   };
 
-  $scope.getInfo = function() {
-    $http.get(API_ENDPOINT.url + '/memberinfo').then(function(result) {
-      $scope.memberinfo = result.data;
-      $state.go('showinfo');
-    });
-  };
-
   $scope.logout = function() {
-    AuthService.logout();
-    $state.go('outside.home');
+    if (confirm("Seguro que desea cerrar sesión?")){
+      AuthService.logout();
+      $state.go('outside.home');
+    }
   };
 })
  
@@ -300,43 +290,15 @@ myApp.controller('AppCtrl', function($scope, $state, AuthService, AUTH_EVENTS) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-myApp.factory("Contact", function($resource) {
+myApp.factory("Contacts", function($resource) {
   return $resource("/api/v1/contacts/:id", {}, {
     update: {method:'PUT', params: {name: '@name', mail: '@mail', phone: '@phone', tag: '@tag'}}
   });
 });
 
-myApp.controller("ContactIndexCtrl", function($scope, Contact, $http, API_ENDPOINT) {
+myApp.controller("ContactIndexCtrl", function($scope, $state, Contacts, $http) {
 
-  $http.get(API_ENDPOINT.url + '/memberid').then(function(result) {
-    $scope.currentuser = result.data.username;
-  });
-
-  Contact.query(function(data) {
+  Contacts.query(function(data) {
     $scope.contacts = data;
   });
 
@@ -349,7 +311,7 @@ myApp.controller("ContactIndexCtrl", function($scope, Contact, $http, API_ENDPOI
 
   $scope.editContactEnable = function(contact){
     if (contact != null){
-      $scope.editKey = contact.id;
+      $scope.editKey = contact._id;
       $scope.editName = contact.name;
       $scope.editMail = contact.mail;
       $scope.editPhone = contact.phone;
@@ -362,9 +324,9 @@ myApp.controller("ContactIndexCtrl", function($scope, Contact, $http, API_ENDPOI
 
   $scope.editContact = function(contactItem,name,mail,phone,tag) {
     if (confirm("Seguro que desea actualizar el contacto?")){
-      Contact.update({id: contactItem.id}, {name: name, mail: mail, phone: phone, tag: tag});
+      Contacts.update({id: contactItem._id}, {name: name, mail: mail, phone: phone, tag: tag});
       $scope.editContactEnable(null);
-      Contact.query(function(data) {
+      Contacts.query(function(data) {
         $scope.contacts = data;
       });
     }
@@ -372,21 +334,22 @@ myApp.controller("ContactIndexCtrl", function($scope, Contact, $http, API_ENDPOI
 
   $scope.deleteContactItem = function(contactItem)  {
     if (confirm("Seguro que desea eliminar?")){
-      Contact.delete({ id: contactItem.id });
+      Contacts.delete({ id: contactItem._id }).$promise.then(function(msg){
+        Contacts.query(function(data) {
+          $scope.contacts = data;
+        });
+      });
     }
-    Contact.query(function(data) {
-      $scope.contacts = data;
-    });
   };
 
   $scope.addContact = function(name,mail,phone,tag) {
     if (name && mail){
-      Contact.save({name: name, mail: mail, phone: phone, tag: tag, user:$scope.currentuser});
+      Contacts.save({name: name, mail: mail, phone: phone, tag: tag});
       $scope.newName = "";
       $scope.newMail = "";
       $scope.newPhone = "";
       $scope.newTag = "";
-      Contact.query(function(data) {
+      Contacts.query(function(data) {
       $scope.contacts = data;
     });
     }
@@ -395,6 +358,18 @@ myApp.controller("ContactIndexCtrl", function($scope, Contact, $http, API_ENDPOI
     }
   };
 
+  $scope.newCampaign = function(){
+    Contacts.query(function(data) {
+      if (data.length > 0){
+        $state.go('newcampaign.body');
+      }else{
+        if (confirm("Agregue algún contacto antes de crear una campaña")){
+          $state.go('contacts');
+        }
+      }
+    });
+  };
+
 });
 
 
@@ -405,17 +380,13 @@ myApp.controller("ContactIndexCtrl", function($scope, Contact, $http, API_ENDPOI
 
 
 
-myApp.factory("Campaign", function($resource) {
+myApp.factory("Campaigns", function($resource) {
   return $resource("/api/v1/campaigns/:id");
 });
 
-myApp.controller("CampaignIndexCtrl", function($scope, Campaign, $http, API_ENDPOINT) {
+myApp.controller("CampaignIndexCtrl", function($scope, Campaigns, $http) {
 
-  $http.get(API_ENDPOINT.url + '/memberid').then(function(result) {
-    $scope.currentuser = result.data.username;
-  });
-
-  Campaign.query(function(data) {
+  Campaigns.query(function(data) {
     $scope.campaigns = data;
   });
 
@@ -430,73 +401,61 @@ myApp.controller("CampaignIndexCtrl", function($scope, Campaign, $http, API_ENDP
 
   $scope.deleteCampaignItem = function(campaignItem)  {
     if (confirm("Seguro que desea eliminar?")){
-      Campaign.delete({ id: campaignItem.id });
+      Campaigns.delete({ id: campaignItem._id }).$promise.then(function(msg){
+        Campaigns.query(function(data) {
+          $scope.campaigns = data;
+        });
+      });
     }
-    Campaign.query(function(data) {
-      $scope.campaigns = data;
-    });
   };
 
 });
 
-myApp.controller("CampaignShowCtrl", function($scope, Campaign, $stateParams, $sce) {
+
+myApp.controller("CampaignShowCtrl", function($scope, Campaigns, $stateParams, $sce) {
   var id = $stateParams.id;
 
-  Campaign.get({ id: id}, function(data) {
+  Campaigns.get({ id: id}, function(data) {
     $scope.campaign = data;
-    $scope.CampaignBody = $sce.trustAsHtml(data.body);
+    $scope.CampaignBody = $sce.trustAsHtml(data.body); // ESTO PODRIA SER INSEGURO
   });
 
 });
 
-myApp.controller("CampaignNewCtrl", function($scope, $state, Campaign, $stateParams, $http, API_ENDPOINT) {
-  
-  $http.get(API_ENDPOINT.url + '/memberid').then(function(result) {
-    $scope.currentuser = result.data;
-  });
+
+
+myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campaigns, $http) {
+
+  if ($state.current.name == 'newcampaign.contacts' && !$scope.newcampaign){ 
+    $state.go('newcampaign.body');
+  }
 
   $scope.newcampaign = $scope.newcampaign || {};
   $('#summernote').summernote('code', $scope.newcampaign.body);
-
-  // if ($state.current.name === 'newcampaign.contacts'){
-  //   console.log("Estado");
-  //   if (!$scope.newcampaign){
-  //     $state.go('campaigns');
-  //   }
-  // }
-
-  // if ($scope.newcampaign == null){
-  //   console.log("Vacia");
-  // }else{
-  //   console.log("Hay algo");
-  //   if (!$scope.newcampaign)
-  //     console.log("Pero no declarado");
-  // }
 
   $scope.selectedcontacts = [];
 
   $scope.addContacts = function () {
     $('#all-item-list input[type="checkbox"]:checked').each(function() {
-      console.log($(this).val())
+      //console.log($(this).val())
       var contact = JSON.parse($(this).val());
-      contact.state = 'pending';
+      contact.state = false;
       contact.seentimes = 0;
-      contact.forwardtimes = 0;
       $scope.selectedcontacts.push(contact);
     });
-    console.log($scope.selectedcontacts);
+    //console.log($scope.selectedcontacts);
   }
 
   $scope.deleteContacts = function () {
     $('#selected-item-list input[type="checkbox"]:checked').each(function() {
-      console.log($(this).val())
+      //console.log($(this).val())
       var contact = JSON.parse($(this).val());
       var indx = $scope.selectedcontacts.map(function(el) {
         return el.id;
       }).indexOf(contact.id);
       $scope.selectedcontacts.splice(indx, 1);
     });
-    console.log($scope.selectedcontacts);
+    //console.log($scope.selectedcontacts);
   }
 
   $scope.notAdded = (item) => {
@@ -518,9 +477,6 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, Campaign, $statePar
       $scope.newcampaign.date = date.toLocaleDateString('en-GB');
       $scope.newcampaign.time = date.toLocaleTimeString('en-GB');
       $scope.newcampaign.timesopen = 0;
-      $scope.newcampaign.user = $scope.currentuser.username;
-      $scope.newcampaign.mail = $scope.currentuser.mail;
-      $scope.newcampaign.mailpass = $scope.currentuser.mailpass;
       $state.go('newcampaign.contacts');
     }
     else{
@@ -532,11 +488,20 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, Campaign, $statePar
     $state.go('newcampaign.body');
   }
 
+
   $scope.addCampaign = function() {
     $scope.newcampaign.contacts = $scope.selectedcontacts;
+    $scope.loading = true;
     if ($scope.newcampaign.contacts.length > 0){
-      Campaign.save($scope.newcampaign);
-      $state.go('campaigns');
+      document.body.style.cursor = "wait";
+
+      Campaigns.save($scope.newcampaign).$promise.then(function(msg){
+        $state.go('showcampaign',{id: msg.id});
+        document.body.style.cursor = "auto";
+      }, function(err){
+        alert(err.data.msg);
+        document.body.style.cursor = "auto";
+      }); 
     }
     else{
       alert('Agregue al menos un destinatario.');
@@ -544,128 +509,3 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, Campaign, $statePar
   };
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// myApp.controller('paramsController', function($scope, $state, $stateParams) {
-//     //..
-//     var obj = $stateParams.obj;
-    
-//     $scope.state = $state.current;
-//     $scope.params = $stateParams; 
-// });
-
-// myApp.service("CampaignService", ["$q", "$timeout", function($q, $timeout) {
-  
-//   var campaigns = [{name: "name1", body:"lorem ipsum blabla", date:"05/10/2017", mail: "mail1@iaw.com", timesopen: "5"},{name: "name2", body:"lorem ipsum lalala", date:"06/10/2017", mail: "mail2@iaw.com", timesopen: "3"}];
-  
-//   this.getCampaigns = function() {
-//     var deferred = $q.defer();
-    
-//     $timeout(function() {
-//       deferred.resolve(campaigns);
-//     }, 1000); 
-    
-//     return deferred.promise; 
-//   };
-  
-  
-//   this.deleteCampaign = function(campaignItem) {
-//     var deferred = $q.defer();
-    
-//     $timeout(function() {
-//       campaigns.splice(campaigns.indexOf(campaignItem), 1);  
-//       deferred.resolve();
-//     }, 500);
-    
-//     return deferred.promise;
-//   };
-  
-//   this.addCampaign = function(campaign) {
-//     var deferred = $q.defer();
-    
-//     $timeout(function() {
-//       campaigns.push(campaign);  
-//       deferred.resolve();
-//     }, 500);
-    
-//     return deferred.promise;
-//   };
-   
-// }]);
-
-// myApp.controller("campaignsController", ["$scope", "CampaignService", function($scope, CampaignService) {
-//   $scope.currentPage = 1;
-//   $scope.pageSize = 10;
-  
-//   // model
-//   $scope.sort = function(keyname){
-//       $scope.sortKey = keyname;   //set the sortKey to the param passed
-//       $scope.reverse = !$scope.reverse; //if true make it false and vice versa
-//   };
-  
-//   $scope.refreshCampaigns = function() {
-//     CampaignService.getCampaigns().then(function(campaigns) {
-//       $scope.campaigns = campaigns;
-//     });  
-//   };
-  
-//   $scope.refreshCampaigns();
-  
-//   $scope.addCampaign = function(name,date,mail,timesopen, body) {
-//     CampaignService.addCampaign({name: name, date: date, mail: mail, timesopen: timesopen, body: body}).then(function() {
-//       console.log("Campaign added");
-//       $scope.refreshCampaigns();
-//     });
-//     $scope.newName = "";
-//     $scope.newMail = "";
-//     $scope.newBody = "";
-//   };
-
-//   $scope.deleteCampaignItem = function(campaignItem)  {
-//     if (confirm("Seguro que desea eliminar?")){
-//     CampaignService.deleteCampaign(campaignItem).then(function() {
-//       console.log("Campaign deleted");
-//       $scope.refreshCampaigns();
-//     });
-//     }
-//   };
-  
-// }]);

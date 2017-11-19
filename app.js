@@ -6,16 +6,19 @@ var bodyParser   = require('body-parser');
 var passport	 = require('passport');
 var jwt          = require('jwt-simple');
 
-var config      = require('./config/database'); // get db config file
+var config       = require('./config/database'); // get db config file
 
-var users        = require ('./routes/users')
+var Users        = require ('./routes/users');
+var User         = require('./models/user');
 var contacts     = require('./routes/contacts');
 var campaigns    = require('./routes/campaigns');
 
-var morgan      = require('morgan');
-var mongoose    = require('mongoose');
+var morgan       = require('morgan');
+var mongoose     = require('mongoose');
 // var config      = require('./config/database'); // get db config file
 // var User        = require('./app/models/user'); // get the mongoose model
+
+
 
 
 var app = express();
@@ -35,14 +38,14 @@ app.use('/api/v1/contacts', contacts);
 
 app.use('/api/v1/campaigns', campaigns);
 
-app.use('/api/v1/users', users);
+app.use('/api/v1/users', Users);
 
 app.use(express.static('public'));
 
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
 
 // connect to database
-//mongoose.connect(config.database);
+mongoose.connect(config.database);
 
 module.exports = app;
 

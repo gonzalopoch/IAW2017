@@ -21,15 +21,22 @@
   <body ng-app="myApp">
     <div>
       <nav class="navbar navbar-default" role="navigation" style="background-color: dodgerBLue; border: none; border-radius: 0px; margin-bottom: 0px;">
-        <div class="navbar-header pull-right">
-          <div style="margin-bottom: -10px; margin-top: -5px;" align="right">
-            <b class="nav-brand">IAW</b>
-          </div>
-          
-          <div>
-            <a class="nav-link" ng-click="logout()" ng-controller="InsideCtrl" ng-show="$state.current.name!='outside.home' && $state.current.name!='outside.register'">Cerrar sesión</a>
-          </div>
+
+        <div class="navbar-header pull-right" ng-show="$state.current.name!='outside.home' && $state.current.name!='outside.register'">
+          <a href="" class="nav-menu dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span style="font-size: 40px; padding: 5px;" class="nav-menu glyphicon glyphicon-envelope"></span>
+          </a>
+          <ul class="dropdown-menu" style="text-align: right">
+            <li> <a href="">Mi cuenta</a> </li>
+            <li role="separator" class="divider"> </li>
+            <li> <a href="" ng-click="logout()" ng-controller="InsideCtrl">Cerrar sesión</a> </li>
+          </ul>
         </div>
+
+        <div class="navbar-header pull-right" ng-hide="$state.current.name!='outside.home' && $state.current.name!='outside.register'">
+            <span style="font-size: 40px; color: white; padding: 5px;" class="glyphicon glyphicon-envelope"></span>
+        </div>
+
         <div ng-show="$state.current.name!='outside.home' && $state.current.name!='outside.register'" class="navbar-header pull-left" style="display: inline-block; margin-top: 20px; padding-left: 5px">
           <span class="nav-button">
             <div style="padding: 5px; border-radius: 3px 3px 0px 0px" ui-sref="campaigns" ui-sref-active="nav-button active" >Campañas</div>

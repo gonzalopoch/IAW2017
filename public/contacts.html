@@ -1,10 +1,13 @@
 <h1>Lista de Contactos</h1>
-<div class="inner-addon right-addon">
+<div ng-hide="contacts.length > 0" style="color: lightgrey; text-align: center">
+  <h2> Aún no tienes ningún contacto!</h2>
+</div>
+<div ng-show="contacts.length > 0" class="inner-addon right-addon">
   <input class="form-control" placeholder="Buscar" type="text" id="search-name" ng-model="search"/>
   <span class="glyphicon glyphicon-search button"></span>
 </div>
 <table id="item-list" class="table table-striped">
-    <thead>
+    <thead ng-show="contacts.length > 0" >
       <tr class="table-header">
         <th ng-click="sort('name')">Nombre
         <span class="glyphicon sort-icon" ng-show="sortKey == 'name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
@@ -22,29 +25,29 @@
       </tr>
     </thead>
     <tbody>
-      <tr dir-paginate="contact in contacts|filter: { user: currentuser } :true |orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
+      <tr dir-paginate="contact in contacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
         <td>
-          <span ng-show="editKey!=contact.id">{{contact.name}}</span>
-          <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-name" ng-model="editName">
+          <span ng-show="editKey!=contact._id">{{contact.name}}</span>
+          <input value="test" ng-show="editKey == contact._id" class="form-control" style="height: 20px" type="text" id="edit-name" ng-model="editName">
         </td>
         <td>
-          <span ng-show="editKey!=contact.id">{{contact.mail}}</span>
-          <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-mail" ng-model="editMail">
+          <span ng-show="editKey!=contact._id">{{contact.mail}}</span>
+          <input value="test" ng-show="editKey == contact._id" class="form-control" style="height: 20px" type="text" id="edit-mail" ng-model="editMail">
         </td>
         <td>
-          <span ng-show="editKey!=contact.id">{{contact.phone}}</span>
-          <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="phone" id="edit-phone" ng-model="editPhone">
+          <span ng-show="editKey!=contact._id">{{contact.phone}}</span>
+          <input value="test" ng-show="editKey == contact._id" class="form-control" style="height: 20px" type="phone" id="edit-phone" ng-model="editPhone">
         </td>
         <td>
-          <span ng-show="editKey!=contact.id">{{contact.tag}}</span>
-          <input value="test" ng-show="editKey == contact.id" class="form-control" style="height: 20px" type="text" id="edit-tag" ng-model="editTag">
+          <span ng-show="editKey!=contact._id">{{contact.tag}}</span>
+          <input value="test" ng-show="editKey == contact._id" class="form-control" style="height: 20px" type="text" id="edit-tag" ng-model="editTag">
         </td>
         <td style="min-width: 50px">
-          <div ng-show="editKey != contact.id">
+          <div ng-show="editKey != contact._id">
             <span class="glyphicon glyphicon-pencil button" ng-click="editContactEnable(contact)"></span>
             <span class="glyphicon glyphicon-trash button" ng-click="deleteContactItem(contact)"></span>
           </div>
-          <div ng-show="editKey == contact.id">
+          <div ng-show="editKey == contact._id">
             <span class="glyphicon glyphicon-ok button" ng-click="editContact(contact,editName,editMail,editPhone,editTag)"></span>
             <span class="glyphicon glyphicon-remove button" ng-click="editContactEnable(null)"></span>
           </div>

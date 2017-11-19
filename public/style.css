@@ -4,6 +4,11 @@
 .button { color: dodgerBlue; }
 .button:hover { color: cornFlowerBlue; cursor: pointer; cursor: hand;}
 
+.nav-menu {color: white;}
+.nav-menu:hover {color: ghostWhite;}
+.nav-menu:active {color: lightGrey;}
+
+
 .nav-button {color: white; float: left;}
 .nav-button:hover {color: ghostWhite; text-decoration: none; cursor: pointer; cursor: hand;}
 .nav-button.active {background: white; color: dodgerBlue;}

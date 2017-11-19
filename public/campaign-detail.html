@@ -21,7 +21,8 @@
         <td>{{contact.name}}</td>
         <td>{{contact.mail}}</td>
         <td>{{contact.tag}}</td>
-        <td>{{contact.state}}</td>
+        <td ng-show=contact.state style="color: DarkSeaGreen">Enviado</td>
+        <td ng-hide=contact.state style="color: LightCoral">Error</td>
         <td>{{contact.seentimes}}</td>
         <td>{{contact.forwardtimes}}</td>
       </tr>
@@ -33,11 +34,10 @@
 <h2>Detalles</h2>
 <ul class="list-group">
   <li class="list-group-item"><b>Fecha y hora de creación:</b> {{campaign.date}} {{campaign.time}}</li>
-  <li class="list-group-item"><b>Correo remitente:</b> {{campaign.mail}}</li>
+  <li class="list-group-item"><b>Remitente:</b> {{campaign.sender}} <{{campaign.mail}}></li>
   <li class="list-group-item"><b>Cantidad de destinatarios:</b> {{campaign.contacts.length}}</li>
   <li class="list-group-item"><b>Cantidad de veces abierto:</b> {{campaign.timesopen}}</li>
-  <li class="list-group-item"><b>Cantidad total de veces reenviado:</b> 0</li>
-  <li class="list-group-item"><b>Cantidad total de errores al enviar:</b> 0</li>
+  <li class="list-group-item"><b>Cantidad total de errores al enviar:</b> {{(campaign.contacts|filter: { state: false } :true).length}}</li>
 </ul>
 <br>
 
