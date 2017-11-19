@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var uuid = require('uuid/v4');
 var nodemailer = require('nodemailer');
 
 var Campaign = require('../models/campaign');
@@ -167,7 +166,7 @@ router.post('/', function(req, res) {
                 }
                 thisid = camp._id;
                 newCampaign.contacts.forEach(function(element,i) {
-                  var reques = '<img src="http://localhost:3000/api/v1/track/'+thisid+'/'+element.mail+'.png" width="0" height="0">';
+                  var reques = '<img src="http://localhost:3000/api/v1/track/'+thisid+'/'+mails_sent+'.png" width="1" height="1">';
                   // ACA VA LA REQUEST HAY QUE VER COMO HACERLA
                   let HelperOptions = {
                     from: from_mailer,

@@ -427,14 +427,14 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campa
   if ($state.current.name == 'newcampaign.contacts' && !$scope.newcampaign){ 
     $state.go('newcampaign.body');
   }
-  
+
   if ($state.current.name == 'newcampaign.contacts' || $state.current.name == 'newcampaign.body'){
     // window.onbeforeunload = function(evt) {
     //   return true;
     // }
     $scope.$on('$stateChangeStart', function(event,tS) {
       console.log(tS.name);
-      if (!(tS.name == 'newcampaign.body' || tS.name == 'newcampaign.contacts')){
+      if (!(tS.name == 'newcampaign.body' || tS.name == 'newcampaign.contacts'|| tS.name == 'showcampaign') ){
         if (!confirm("Seguro que deseas salir de esta página?\nPerderás cualquier cambio hecho...")) {
             event.preventDefault();
         }

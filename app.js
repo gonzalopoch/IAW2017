@@ -8,15 +8,13 @@ var jwt          = require('jwt-simple');
 
 var config       = require('./config/database'); // get db config file
 
-var Users        = require ('./routes/users');
-var User         = require('./models/user');
+var users        = require ('./routes/users');
 var contacts     = require('./routes/contacts');
 var campaigns    = require('./routes/campaigns');
+var track    = require('./routes/track');
 
 var morgan       = require('morgan');
 var mongoose     = require('mongoose');
-// var config      = require('./config/database'); // get db config file
-// var User        = require('./app/models/user'); // get the mongoose model
 
 
 
@@ -38,7 +36,9 @@ app.use('/api/v1/contacts', contacts);
 
 app.use('/api/v1/campaigns', campaigns);
 
-app.use('/api/v1/users', Users);
+app.use('/api/v1/track', track);
+
+app.use('/api/v1/users', users);
 
 app.use(express.static('public'));
 
