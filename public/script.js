@@ -75,13 +75,11 @@ myApp.config(function($stateProvider,$urlRouterProvider) {
   .state('newcampaign.body', {
     url: '',
     templateUrl: 'new-campaign.html',
-    controller: 'CampaignNewCtrl'
   })
   
   .state('newcampaign.contacts', {
     url: '/destinatarios',
     templateUrl: 'select-contacts.html',
-    controller: 'CampaignNewCtrl'
   })
 
   .state('showinfo', {
@@ -429,6 +427,20 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campa
   if ($state.current.name == 'newcampaign.contacts' && !$scope.newcampaign){ 
     $state.go('newcampaign.body');
   }
+  
+  if ($state.current.name == 'newcampaign.contacts' || $state.current.name == 'newcampaign.body'){
+    // window.onbeforeunload = function(evt) {
+    //   return true;
+    // }
+    $scope.$on('$stateChangeStart', function(event,tS) {
+      console.log(tS.name);
+      if (!(tS.name == 'newcampaign.body' || tS.name == 'newcampaign.contacts')){
+        if (!confirm("Seguro que deseas salir de esta página?\nPerderás cualquier cambio hecho...")) {
+            event.preventDefault();
+        }
+      }  
+    });
+  }
 
   $scope.newcampaign = $scope.newcampaign || {};
   $('#summernote').summernote('code', $scope.newcampaign.body);
@@ -451,8 +463,8 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campa
       //console.log($(this).val())
       var contact = JSON.parse($(this).val());
       var indx = $scope.selectedcontacts.map(function(el) {
-        return el.id;
-      }).indexOf(contact.id);
+        return el._id;
+      }).indexOf(contact._id);
       $scope.selectedcontacts.splice(indx, 1);
     });
     //console.log($scope.selectedcontacts);
@@ -460,13 +472,20 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campa
 
   $scope.notAdded = (item) => {
     var indx = $scope.selectedcontacts.map(function(el) {
-        return el.id;
-    }).indexOf(item.id);
+        return el._id;
+    }).indexOf(item._id);
     if ( indx == -1 ){
       return item;
     }else { 
       return
     }
+  }
+
+  $scope.goBack = function (){
+    $state.go('newcampaign.body');
+    $scope.$on('$stateChangeSuccess', function(event,) {
+      $('#summernote').summernote('code', $scope.newcampaign.body);
+    });
   }
 
   $scope.selectContacts = function (){
@@ -483,11 +502,6 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campa
       alert('Complete los campos marcados con asteriscos.');
     }
   };
-
-  $scope.goBack = function (){
-    $state.go('newcampaign.body');
-  }
-
 
   $scope.addCampaign = function() {
     $scope.newcampaign.contacts = $scope.selectedcontacts;
