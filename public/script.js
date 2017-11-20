@@ -251,7 +251,8 @@ myApp.controller('RegisterCtrl', function($scope, AuthService, $state) {
       });
     }else{
       alert ('Registro fallido! Las contraseñas no coinciden.')
-
+      $scope.pass.password = '';
+      $scope.pass.password2 = '';
     }
     
   };
