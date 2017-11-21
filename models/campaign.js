@@ -40,6 +40,9 @@ var CampaignSchema = new Schema({
         required: true
     },
   contacts: {
+    },
+  state: {
+      type: Boolean
     }
 });
 

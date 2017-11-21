@@ -1,0 +1,42 @@
+<h1>Mi cuenta</h1>
+<div class="col-md-6 col-sm-8 col-xs-8 checkbox" align="left">
+<form ng-submit="editUser()">
+  <div class="form-group" align="left"> 
+    <label><b>Nombre de usuario:</b></label>
+    <p style="padding-left: 13px; padding-top: 7px; padding-bottom: 7px;">{{user.username}}</p>
+  </div>  
+  <div class="form-group" align="left">
+    <label><b>Nombre:</b></label>
+    <p ng-hide="editEnable" style="padding-left: 13px; padding-top: 7px; padding-bottom: 7px;">{{user.name}}</p>
+    <input ng-show="editEnable" class="form-control" type="text" id="new-name" ng-model="user.name" />
+  </div>
+  <div class="form-group" align="left">
+    <label><b>Apellido:</b></label>
+    <p ng-hide="editEnable" style="padding-left: 13px; padding-top: 7px; padding-bottom: 7px;">{{user.lastname}}</p>
+    <input ng-show="editEnable" class="form-control" type="text" id="new-lastname" ng-model="user.lastname" />
+  </div>
+  <div class="form-group" align="left">
+    <label><b>Correo electrónico:</b> <b ng-show="editEnable"> *</b></label>
+    <p ng-hide="editEnable" style="padding-left: 13px; padding-top: 7px; padding-bottom: 7px;">{{user.mail}}</p>
+    <input ng-show="editEnable" class="form-control" type="text" id="new-mail" ng-model="user.mail" />
+  </div>  
+    <div ng-show="editEnable" class="form-group" align="left">
+    <label><b>Contraseña de correo electrónico:</b> <b ng-show="editEnable"> *</b></label>
+    <input class="form-control" type="password" id="new-mailpass" ng-model="user.mailpass" />
+  </div>  
+  <div ng-show="editEnable" class="form-group" align="left">
+    <label><b>Contraseña: *</b></label>
+    <input class="form-control" type="password" id="new-pass" ng-model="user.password" />
+  </div>  
+<!--   <div class="checkbox" align="left">
+    <label><input type="checkbox"> Acepto recibir notificaciones en mi cuenta de correo electrónico.</label>
+  </div> -->
+  <br>
+  <div float="right" align="left">
+    <button class="btn btn-default" ng-hide="editEnable" ui-sref="campaigns" type="button">Volver</button>
+    <button class="btn btn-default" ng-show= "editEnable" ng-click="editChange()" type="button">Cancelar</button>
+    <button class="btn btn-custom" ng-hide="editEnable" ng-click="editChange()" type="button">Editar</button>
+    <button class="btn btn-custom" ng-show="editEnable" type="submit">Guardar</button>
+  </div>
+</form>
+</div>

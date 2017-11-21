@@ -1,6 +1,6 @@
 <h1>Registro</h1>
 <div class="col-md-6 col-sm-8 col-xs-8 checkbox" align="left">
-<form>
+<form ng-submit="signup()">
   <div class="form-group" align="left"> 
     <label><b>Nombre de usuario: *</b></label>
     <input class="form-control" type="text" id="new-username" ng-model="user.username" />
@@ -25,17 +25,17 @@
     <label><b>Contraseña: *</b></label>
     <input class="form-control" type="password" id="new-pass" ng-model="pass.password" />
   </div>  
- <div class="form-group" align="left">
+  <div class="form-group" align="left">
     <label><b>Repetir contraseña: *</b></label>
     <input class="form-control" type="password" id="new-pass2" ng-model="pass.password2" />
   </div>
-  <div class="checkbox" align="left">
+<!--   <div class="checkbox" align="left">
     <label><input type="checkbox"> Acepto recibir notificaciones en mi cuenta de correo electrónico.</label>
+  </div> -->
+  <br>
+  <div float="right" align="left">
+    <button class="btn btn-default" ui-sref="outside.home" type="button">Cancelar</button>
+    <button class="btn btn-custom" type="submit">Crear cuenta</button>
   </div>
 </form>
-<br>
-<div float="right" align="left">
-    <button class="btn btn-default" ui-sref="outside.home" style="">Cancelar</button>
-    <button class="btn btn-custom" ng-click="signup()">Crear cuenta</button>
-  </div>
 </div>

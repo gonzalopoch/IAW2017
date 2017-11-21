@@ -19,6 +19,9 @@
           <th ng-click="sort('mail')">Remitente
           <span class="glyphicon sort-icon" ng-show="sortKey=='mail'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
+          <th ng-click="sort('mail')">Estado
+          <span class="glyphicon sort-icon" ng-show="sortKey=='state'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
           <th ng-click="sort('timesopen')">Veces abierto
           <span class="glyphicon sort-icon" ng-show="sortKey=='timesopen'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
@@ -30,6 +33,8 @@
           <td>{{campaign.name}}</td>
           <td>{{campaign.date}} {{campaign.time}}</td>
           <td>{{campaign.sender}} <{{campaign.mail}}></td>
+          <td ng-show=campaign.state style="color: DarkSeaGreen">Enviado</td>
+          <td ng-hide=campaign.state style="color: LightCoral">Error</td>
           <td>{{campaign.timesopen}}</td>
           <td style="min-width: 50px">
             <div>

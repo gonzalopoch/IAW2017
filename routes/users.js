@@ -129,7 +129,7 @@ router.get('/memberid', passport.authenticate('jwt', { session: false}), functio
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
@@ -156,6 +156,40 @@ getToken = function (headers) {
     return null;
   }
 };
+
+router.put('/edit', function(req, res, next) {
+  var updatedUser = req.body;
+  var token = getToken(req.headers);
+  if (token) {
+    var decoded = jwt.decode(token, config.secret);
+    User.findOne({
+      username: decoded.username
+    }, function(err, user) {
+        if (err) throw err;
+ 
+        if (!user) {
+          return res.status(403).send({success: false, msg: 'User not found.'});
+        } else {
+          user.comparePassword(req.body.password, function (err, isMatch) {
+            if (isMatch && !err) {
+              user.name = req.body.name;
+              user.lastname = req.body.lastname;
+              user.mail = req.body.mail;
+              user.mailpass = req.body.mailpass;
+              user.save(function (err) {
+                if (err) return res.status(400).json({success: false, msg: 'Error al actualizar usuerio.'});
+                res.status(200).json({success: true, msg: 'Información de usuario actualizada.'});
+              });
+            } else {
+              res.status(403).send({success: false, msg: 'Contraseña incorrecta.'});
+            }
+          });  
+        }
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'No token provided.'});
+  }
+});
 
 // create a new user account (POST http://localhost:8080/api/signup)
 router.post('/signup', function(req, res) {

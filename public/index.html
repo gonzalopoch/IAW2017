@@ -18,7 +18,7 @@
 
   </head>
 
-  <body ng-app="myApp">
+  <body ng-app="myApp" ng-controller="AppCtrl">
     <div>
       <nav class="navbar navbar-default" role="navigation" style="background-color: dodgerBLue; border: none; border-radius: 0px; margin-bottom: 0px;">
 
@@ -27,7 +27,7 @@
             <span style="font-size: 40px; padding: 5px;" class="nav-menu glyphicon glyphicon-envelope"></span>
           </a>
           <ul class="dropdown-menu" style="text-align: right">
-            <li> <a href="">Mi cuenta</a> </li>
+            <li> <a href="" ui-sref="account">Mi cuenta</a> </li>
             <li role="separator" class="divider"> </li>
             <li> <a href="" ng-click="logout()" ng-controller="InsideCtrl">Cerrar sesión</a> </li>
           </ul>

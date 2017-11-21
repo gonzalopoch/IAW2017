@@ -33,7 +33,7 @@ router.put('/:id', function(req, res, next) {
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
@@ -65,14 +65,14 @@ router.get('/', passport.authenticate('jwt', { session: false}), function(req, r
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
         if (!user) {
           return res.status(403).send({success: false, msg: 'User not found.'});
         } else {
-            Contact.find({user: decoded.name}, function(err, contacts) {
+            Contact.find({user: decoded.username}, function(err, contacts) {
               res.status(200);
               res.json(contacts);  
             });
@@ -114,7 +114,7 @@ router.delete('/:id', function(req, res, next) {
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
@@ -127,7 +127,7 @@ router.delete('/:id', function(req, res, next) {
                 contact.remove(function (err) {
                   if (err) return res.status(400).send({success: false, msg: 'Contact not erased.'});
                   return res.status(200).send({success: true, msg: 'Contact erased.'});
-              });
+                });
             });
         }
     });
@@ -143,7 +143,7 @@ router.post('/', function(req, res) {
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
@@ -154,7 +154,7 @@ router.post('/', function(req, res) {
               return res.status(400).json({success: false, msg: 'Ingrese remitente y nombre.'});
             }else{
               var newContact = new Contact(req.body);  
-              newContact.user = decoded.name;
+              newContact.user = decoded.username;
               newContact.save(function(err) {
                 if (err) {
                   return res.status(400).json({success: false, msg: 'Error al crear contacto.'});

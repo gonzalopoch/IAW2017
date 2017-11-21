@@ -25,7 +25,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr dir-paginate="contact in contacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
+      <tr dir-paginate="contact in contacts|orderBy:sortKey:reverse|filter:search|itemsPerPage:10">
         <td>
           <span ng-show="editKey!=contact._id">{{contact.name}}</span>
           <input value="test" ng-show="editKey == contact._id" class="form-control" style="height: 20px" type="text" id="edit-name" ng-model="editName">

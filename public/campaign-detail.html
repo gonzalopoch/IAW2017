@@ -9,13 +9,12 @@
         <th>Tags</th>
         <th>Estado</th>
         <th>Veces visto</th>
-        <th>Veces reenviado</th>
       </tr>
     </thead>
     <tbody>
       <!-- Acá para  <tr> habría que hacer un ng-repeat y agarrar
        todos los destinatarios de las campañas-->
-      <tr ng-repeat="contact in campaign.contacts">
+      <tr dir-paginate="contact in campaign.contacts |itemsPerPage:5">
         <!-- Acá agarramos cada destinatario y mostramos los atributos
         de veces abierto y todo.-->
         <td>{{contact.name}}</td>
@@ -24,10 +23,12 @@
         <td ng-show=contact.state style="color: DarkSeaGreen">Enviado</td>
         <td ng-hide=contact.state style="color: LightCoral">Error</td>
         <td>{{contact.seentimes}}</td>
-        <td>{{contact.forwardtimes}}</td>
       </tr>
     </tbody>
   </table>
+  <div class="text-center" style="margin-top: -20px;">
+    <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="dirPagination.html"></dir-pagination-controls>
+  </div>
 <br>  
 <div class="container-fluid body-campaña" ng-bind-html="CampaignBody"></div>
 <br>

@@ -82,10 +82,10 @@ myApp.config(function($stateProvider,$urlRouterProvider) {
     templateUrl: 'select-contacts.html',
   })
 
-  .state('showinfo', {
-    url: '/info',
-    templateUrl: 'showinfo.html',
-    controller: 'InsideCtrl'
+  .state('account', {
+    url: '/cuenta',
+    templateUrl: 'account.html',
+    controller: 'AccountCtrl'
   })
   
   .state('contacts', {
@@ -98,6 +98,7 @@ myApp.config(function($stateProvider,$urlRouterProvider) {
 });
 
 myApp.run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+
   $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
     if (!AuthService.isAuthenticated()) {
       if (next.name !== 'outside.home' && next.name !== 'outside.register') {
@@ -228,6 +229,57 @@ myApp.controller('LoginCtrl', function($scope, AuthService, $state) {
     
   };
 })
+
+myApp.factory("Users", function($resource) {
+  return $resource("/api/v1/users/edit", null, {
+    update: {method:'PUT'}
+  });
+});
+
+myApp.controller('AccountCtrl', function($scope, $q, $http, $state, API_ENDPOINT, Users, AuthService) {
+  $scope.editEnable = false;
+  $scope.user = {
+    username: '',
+    name: '',
+    lastname: '',
+    mail: '',
+    mailpass: '',
+    password: '',
+  };
+
+
+  $http.get(API_ENDPOINT.url + '/users/memberid').then(function(result) {
+    $scope.user = result.data;
+    $scope.user.password = '';
+  });
+
+  $scope.editChange = function (){
+    $scope.editEnable = !$scope.editEnable;
+    $http.get(API_ENDPOINT.url + '/users/memberid').then(function(result) {
+      $scope.user = result.data;
+      $scope.user.password = '';
+    });
+  };
+
+  $scope.editUser = function (){
+
+      if (!$scope.user.password || $scope.user.password == '' || !$scope.user.mail || $scope.user.mail == '' || !$scope.user.mailpass || $scope.user.mailpass == '') {
+        alert('Complete los campos marcados con asteriscos.');
+      } else {
+        Users.update($scope.user).$promise.then(function(succMsg){
+          alert(succMsg.msg);
+          AuthService.login($scope.user).then(function(msg) {
+            $scope.user.password = '';
+            $scope.editChange();
+          }, function(errMsg) {
+          });
+        }, function(errMsg){
+          alert(errMsg.data.msg);
+        });
+      }
+  }
+
+})
  
 myApp.controller('RegisterCtrl', function($scope, AuthService, $state) {
   
@@ -323,11 +375,13 @@ myApp.controller("ContactIndexCtrl", function($scope, $state, Contacts, $http) {
 
   $scope.editContact = function(contactItem,name,mail,phone,tag) {
     if (confirm("Seguro que desea actualizar el contacto?")){
-      Contacts.update({id: contactItem._id}, {name: name, mail: mail, phone: phone, tag: tag});
-      $scope.editContactEnable(null);
-      Contacts.query(function(data) {
-        $scope.contacts = data;
+      Contacts.update({id: contactItem._id}, {name: name, mail: mail, phone: phone, tag: tag}).$promise.then(function(msg){
+        $scope.editContactEnable(null);
+        Contacts.query(function(data) {
+          $scope.contacts = data;
+        });
       });
+
     }
   }
 
@@ -341,16 +395,17 @@ myApp.controller("ContactIndexCtrl", function($scope, $state, Contacts, $http) {
     }
   };
 
-  $scope.addContact = function(name,mail,phone,tag) {
-    if (name && mail){
-      Contacts.save({name: name, mail: mail, phone: phone, tag: tag});
-      $scope.newName = "";
-      $scope.newMail = "";
-      $scope.newPhone = "";
-      $scope.newTag = "";
-      Contacts.query(function(data) {
-      $scope.contacts = data;
-    });
+  $scope.addContact = function() {
+    if ($scope.newName && $scope.newMail){
+      Contacts.save({name: $scope.newName, mail: $scope.newMail, phone: $scope.newPhone, tag: $scope.newTag}).$promise.then(function(msg){
+        $scope.newName = "";
+        $scope.newMail = "";
+        $scope.newPhone = "";
+        $scope.newTag = "";
+        Contacts.query(function(data) {
+          $scope.contacts = data;
+        });
+      });
     }
     else{
       alert('Ingrese nombre y correo.');
@@ -413,6 +468,8 @@ myApp.controller("CampaignIndexCtrl", function($scope, Campaigns, $http) {
 
 myApp.controller("CampaignShowCtrl", function($scope, Campaigns, $stateParams, $sce) {
   var id = $stateParams.id;
+  $scope.currentPage = 1;
+  $scope.pageSize = 10;
 
   Campaigns.get({ id: id}, function(data) {
     $scope.campaign = data;
@@ -434,7 +491,6 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campa
     //   return true;
     // }
     $scope.$on('$stateChangeStart', function(event,tS) {
-      console.log(tS.name);
       if (!(tS.name == 'newcampaign.body' || tS.name == 'newcampaign.contacts'|| tS.name == 'showcampaign') ){
         if (!confirm("Seguro que deseas salir de esta página?\nPerderás cualquier cambio hecho...")) {
             event.preventDefault();
@@ -513,9 +569,11 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campa
       Campaigns.save($scope.newcampaign).$promise.then(function(msg){
         $state.go('showcampaign',{id: msg.id});
         document.body.style.cursor = "auto";
+        $scope.loading = false;
       }, function(err){
-        alert(err.data.msg);
+        alert(err.data.msg+'\nLe recomendamos volver y guardar el cuerpo de su mensaje, para luego actualizar su información de usuario');
         document.body.style.cursor = "auto";
+        $scope.loading = false;
       }); 
     }
     else{

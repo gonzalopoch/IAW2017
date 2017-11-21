@@ -45,6 +45,11 @@ app.use(express.static('public'));
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
 
 // connect to database
+// mongoose.connect(config.database, {
+//   useMongoClient: true,
+//   /* other options */
+// });
+
 mongoose.connect(config.database);
 
 module.exports = app;

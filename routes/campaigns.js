@@ -27,14 +27,14 @@ router.get('/', passport.authenticate('jwt', { session: false}), function(req, r
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
         if (!user) {
           return res.status(403).send({success: false, msg: 'User not found.'});
         } else {
-            Campaign.find({user: decoded.name}, function(err, campaigns) {
+            Campaign.find({user: decoded.username}, function(err, campaigns) {
               return res.status(200).json(campaigns);  
             });
         }
@@ -70,7 +70,7 @@ router.get('/:id', function(req, res, next) {
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
@@ -81,7 +81,7 @@ router.get('/:id', function(req, res, next) {
               _id: id
             }, function(err, campaign) {
               if (err) throw err;
-              if (campaign.user != decoded.name) return res.status(401).json({success: false, msg: 'No puedes ver esta campaña.'});
+              if (campaign.user != decoded.username) return res.status(401).json({success: false, msg: 'No puedes ver esta campaña.'});
               if (!campaign) {
                 return res.status(404).send({success: false, msg: 'Campaign not found.'});
               } else {
@@ -101,7 +101,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false}), function(
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
@@ -110,7 +110,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false}), function(
         } else {
             Campaign.findById(id, function (err, campaign) {
               if (err) return res.status(400).json({success: false, msg: 'Error al eliminar campaña.'});
-              if (campaign.user != decoded.name) return res.status(401).json({success: false, msg: 'No puedes eliminar esta campaña.'});
+              if (campaign.user != decoded.username) return res.status(401).json({success: false, msg: 'No puedes eliminar esta campaña.'});
                 campaign.remove(function (err) {
                   if (err) return res.status(400).send({success: false, msg: 'Campaign not erased.'});
                   return res.status(200).send({success: true, msg: 'Campaign erased.'});
@@ -129,7 +129,7 @@ router.post('/', function(req, res) {
   if (token) {
     var decoded = jwt.decode(token, config.secret);
     User.findOne({
-      name: decoded.name
+      username: decoded.username
     }, function(err, user) {
         if (err) throw err;
  
@@ -140,9 +140,10 @@ router.post('/', function(req, res) {
               return res.status(400).json({success: false, msg: 'Ingrese usuario, remitente y nombre.'});
             }else{
               var newCampaign = new Campaign(req.body);
-              newCampaign.user = decoded.name;
+              newCampaign.user = decoded.username;
               newCampaign.mail = decoded.mail;
               newCampaign.mailpass = decoded.mailpass;
+              newCampaign.state = false;
               let transporter = nodemailer.createTransport({
                 service: 'gmail',
                 secure: false,
@@ -159,7 +160,9 @@ router.post('/', function(req, res) {
               var from_mailer = '"';
               from_mailer = from_mailer.concat(newCampaign.sender+'" <'+newCampaign.mail)
               var mails_sent = 0;
+              var mails_error = 0;
               var thisid;
+              var error_535 = false;
               newCampaign.save(function(err,camp) {
                 if (err) {
                   return res.status(400).json({success: false, msg: 'Error al (pre)crear campaña.'});
@@ -177,21 +180,32 @@ router.post('/', function(req, res) {
                   transporter.sendMail(HelperOptions, (error, info) =>{
                     mails_sent++;
                     if(error){
-                      newCampaign.contacts[i].state = false;
                       console.log(error);
+                      if (error.responseCode === 535 && !error_535){
+                        error_535 = true;
+                        return res.status(403).json({success: false, msg: 'No se pudo enviar el mensaje. La información de su correo es incorrecta.'});
+                      }
+                      newCampaign.contacts[i].state = false;
+                      mails_error++;
                     }else{
                       if (info.accepted.length > 0){
                         newCampaign.contacts[i].state = true;
                       } else {
                         newCampaign.contacts[i].state = false;
+                        mails_error++;
                       }
                       console.log("Mensaje enviado.");
                       console.log(info);
                     }
-                    if (mails_sent == newCampaign.contacts.length){
+                    if (mails_sent == newCampaign.contacts.length && !error_535){
                       Campaign.findById(thisid, function (err, campaign) {
                         if (err) return res.status(400).json({success: false, msg: 'Error al actualizar campaña.'});
                         campaign.contacts = newCampaign.contacts;
+                        if (mails_sent > mails_error){
+                          console.log(mails_sent);
+                          console.log(mails_error);
+                          campaign.state = true;
+                        }
                         campaign.save(function (err) {
                           if (err) return res.status(400).json({success: false, msg: 'Error al actualizar campaña.'});
                           res.status(201).json({success: true, msg: 'Campaña creada.', id: thisid});
