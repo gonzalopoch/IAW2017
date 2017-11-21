@@ -294,8 +294,12 @@ myApp.controller('RegisterCtrl', function($scope, AuthService, $state) {
   $scope.signup = function() {
     if ($scope.pass.password === $scope.pass.password2){    
       AuthService.register($scope.user,$scope.pass).then(function(msg) {
-        $state.go('campaigns');
-        alert('Registro exitoso!\n'+msg);
+        AuthService.login($scope.user).then(function() {
+          alert('Registro exitoso!\n');
+          $state.go('campaigns');
+        }, function() {
+          alert('Inicio de sesión fallido!\n');
+        });
       }, function(errMsg) {
         alert('Registro fallido!\n'+errMsg);      
         $scope.pass.password = '';
@@ -571,13 +575,14 @@ myApp.controller("CampaignNewCtrl", function($scope, $state, $stateParams, Campa
         document.body.style.cursor = "auto";
         $scope.loading = false;
       }, function(err){
-        alert(err.data.msg+'\nLe recomendamos volver y guardar el cuerpo de su mensaje, para luego actualizar su información de usuario');
+        alert(err.data.msg || err.statusText);
         document.body.style.cursor = "auto";
         $scope.loading = false;
       }); 
     }
     else{
       alert('Agregue al menos un destinatario.');
+      $scope.loading = false;
     }
   };
 

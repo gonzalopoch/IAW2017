@@ -183,7 +183,7 @@ router.post('/', function(req, res) {
                       console.log(error);
                       if (error.responseCode === 535 && !error_535){
                         error_535 = true;
-                        return res.status(403).json({success: false, msg: 'No se pudo enviar el mensaje. La información de su correo es incorrecta.'});
+                        return res.status(403).json({success: false, msg: 'No se pudo enviar el mensaje. La información de su correo es incorrecta.\nLe recomendamos volver y guardar el cuerpo de su mensaje, para luego actualizar su información de usuario'});
                       }
                       newCampaign.contacts[i].state = false;
                       mails_error++;
